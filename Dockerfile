@@ -30,7 +30,16 @@ RUN npm ci
 # Bundle app source
 COPY --chown=node:node . .
 
+# Generate the prisma client
 RUN npx prisma generate
+
+# Copy git folder
+COPY .git/ ./.git/
+
+# RUN npm apt-get install git
+
+# Get the git repo for development
+# RUN git clone https://github.com/TripSit/database-admin --bare
 
 # For container development, the following command runs forever, so we can inspect the container
 CMD tail -f /dev/null
