@@ -1,0 +1,13 @@
+{
+  "Servers": {
+      "1": {
+          "Name": "TripSit Dev",
+          "Group": "Servers",
+          "Port": 5432,
+          "Username": "tripsit",
+          "Host": "database",
+          "SSLMode": "prefer",
+          "MaintenanceDB": "postgres"
+      }
+  }
+}
