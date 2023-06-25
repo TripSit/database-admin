@@ -5,7 +5,7 @@
 # We stop at the end of this step in development, so it also includes the deploy command
 # We install jest, eslint and ts-node so we can run tests and lint.
 
-FROM node:20.2-alpine As development
+FROM node:20.2 As development
 
 ENV TZ="America/Chicago"
 ENV NODE_ENV=development
@@ -34,12 +34,14 @@ COPY --chown=node:node . .
 RUN npx prisma generate
 
 # Copy git folder
-COPY .git/ ./.git/
+# This doesnt work when you download the image
+# COPY .git/ ./.git/
 
-# RUN npm apt-get install git
+# RUN apt-get -y update
+# RUN apt-get -y install git
 
 # Get the git repo for development
-# RUN git clone https://github.com/TripSit/database-admin --bare
+RUN git clone https://github.com/TripSit/database-admin --bare
 
 # For container development, the following command runs forever, so we can inspect the container
 CMD tail -f /dev/null
