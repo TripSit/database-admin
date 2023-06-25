@@ -21,7 +21,7 @@ WORKDIR /usr/src/app
 # Copy application dependency manifests to the container image.
 # A wildcard is used to ensure copying both package.json AND package-lock.json (when available).
 # Copying this first prevents re-running npm install on every code change.
-COPY --chown=node:node package*.json ./
+COPY package*.json ./
 
 # Install app dependencies using the `npm ci` command instead of `npm install`
 # Use NPM CI even though this may be your first time, cuz package-lock already thinks you installed stuff
@@ -29,7 +29,7 @@ RUN npm ci
 
 # COPY --chown=node:node db/prisma/schema.prisma ./prisma/
 
-COPY --chown=node:node . .
+COPY . .
 
 RUN npx prisma generate
 
