@@ -25,7 +25,7 @@ steps:
         Build {{build.number}} succeeded.
         {{else}}
         Build {{build.number}} failed.
-        {{/success}}
+        {{/success}} 
         Build time: {{build.started}}
         Commit message: {{commit.message}}
         Commit author: {{commit.author}}
