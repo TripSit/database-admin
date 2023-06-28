@@ -10,7 +10,7 @@ steps:
       - apk update
       - apk upgrade
       - apk add --no-cache git
-      - docker compose -f docker-compose.host.yml --project-name tripsit-live up tripbot_website -d --force-recreate --build
+      - docker compose -f docker-compose.host.yml --project-name tripsit-live up database -d --force-recreate --build
     environment:
       NODE_ENV:
         from_secret: NODE_ENV
