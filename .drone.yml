@@ -41,4 +41,10 @@ trigger:
   - main
 trigger:
   event:
+  # - cron
+  - custom
   - push
+  # - pull_request
+  # - tag
+  # - promote
+  # - rollback
