@@ -7,42 +7,11 @@ steps:
     image: docker
     privileged: true
     commands:      
-      # - apk update
-      # - apk upgrade
-      # - apk add --no-cache git
-      # - docker compose -f docker-compose.host.yml --project-name tripsit-live up database_backend -d --force-recreate --build
-      - tail -f /dev/null
-    environment:
-      NODE_ENV:
-        from_secret: NODE_ENV
-      XID:
-        from_secret: XID
-      PUID:
-        from_secret: PUID
-      PGID:
-        from_secret: PGID
-      TIME_ZONE:
-        from_secret: TIME_ZONE
-      TZ:
-        from_secret: TZ
-      USERDIR:
-        from_secret: USERDIR
-      DOCKERDIR:
-        from_secret: DOCKERDIR
-      SECRETSDIR:
-        from_secret: SECRETSDIR
-      LOCAL_MOUNT:
-        from_secret: LOCAL_MOUNT
-      DNS_DOMAIN:
-        from_secret: DNS_DOMAIN
-      OTHER_DOMAIN:
-        from_secret: OTHER_DOMAIN
-      DOCKER_HOST:
-        from_secret: DOCKER_HOST
-      DOCKER_BUILDKIT:
-        from_secret: DOCKER_BUILDKIT
-      DATABASE_URL:
-        from_secret: DATABASE_URL
+      - apk update
+      - apk upgrade
+      - apk add --no-cache git
+      - docker compose -f docker-compose.host.yml --project-name tripsit-live up database_backend -d --force-recreate --build
+      # - tail -f /dev/null
 
   - name: discord notification
     image: appleboy/drone-discord
