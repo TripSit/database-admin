@@ -44,7 +44,7 @@ RUN npx prisma generate
 # RUN git clone https://github.com/TripSit/database-admin --bare
 
 # For container development, the following command runs forever, so we can inspect the container
-CMD tail -f /dev/null
+# CMD tail -f /dev/null
 
 ###################
 # BUILD FOR PRODUCTION

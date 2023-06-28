@@ -3,15 +3,14 @@ type: docker
 name: default
 
 steps:
-  - name: Rebuild DB Backend
+  - name: Rebuild Website
     image: docker
     privileged: true
-    commands:      
+    commands:
       - apk update
       - apk upgrade
       - apk add --no-cache git
       - docker compose -f docker-compose.host.yml --project-name tripsit-live up tripbot_website -d --force-recreate --build
-      # - tail -f /dev/null
     environment:
       NODE_ENV:
         from_secret: NODE_ENV
@@ -41,8 +40,6 @@ steps:
         from_secret: DOCKER_HOST
       DOCKER_BUILDKIT:
         from_secret: DOCKER_BUILDKIT
-      DATABASE_URL:
-        from_secret: DATABASE_URL
 
   - name: discord notification
     image: appleboy/drone-discord
