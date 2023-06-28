@@ -18,7 +18,7 @@
     "start": "npm run build && npm run db:update && node --inspect=0.0.0.0 dist/index.js",
     "test": "jest --silent -c ./src/testing/jest.unit.config.ts",
     "build": "rimraf dist && swc ./src -d ./dist",
-    "db:update": "npm run db:migrate:latest && npm run db:seed && npm run db:prisma:pull && npm run db:prisma:generate && npm run db:types",
+    "db:update": "npm run db:migrate:latest && npm run db:prisma:pull && npm run db:prisma:generate && npm run db:types",
     "db:migrate:latest": "knex --knexfile ./src/knexfile.ts migrate:latest",
     "db:seed": "npx knex --knexfile ./src/knexfile.ts seed:run",
     "db:prisma:pull": "npx prisma db pull",
