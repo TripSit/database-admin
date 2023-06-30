@@ -51,3 +51,12 @@ Separately, this setup is supported by the PGAdmin4 'database_frontend' containe
 * Port over the existing API
 * Expand on the new API
 * GraphQL? / Apollo?
+
+
+
+# Production setup
+1) Add data to the DB
+2) Show down the production bot
+3) Start up the new bot
+
+  
