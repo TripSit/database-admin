@@ -14,7 +14,7 @@
     "rebuild:be": "docker compose up database_backend -d --force-recreate --build",
     "rebuild:pg": "docker compose up database -d --force-recreate --build",
     "rebuild:pg4": "docker compose up database_frontend -d --force-recreate --build",
-    "rebuild:all": "docker compose up -d --force-recreate --build",
+    "rebuild:all": "docker compose --profile all up -d --force-recreate --build",
     "start": "npm run build && npm run db:update && node --inspect=0.0.0.0 dist/index.js",
     "test": "jest --silent -c ./src/testing/jest.unit.config.ts",
     "build": "rimraf dist && swc ./src -d ./dist",
