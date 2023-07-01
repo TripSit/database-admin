@@ -16,9 +16,9 @@ Run 'rebuild:all' to setup the services:
   http://localhost:5000/api/v2/drugs
   http://localhost:5000/api/v2/drugs/dxm
 
-Note: Use 'rebuild:be' to /only/ rebuild the backend stuff: The other containers hardly ever need to be restarted.
+Note: You likely only want to use 'rebuild:be' to /only/ rebuild the backend stuff: The other containers hardly ever need to be restarted.
 
-Once the containers are running, run 'db:update' to run the knex scripts:
+Once the containers are running, you can run 'db:update' to run the knex scripts:
 * Migrate to the latest version
 * Seed the database
 * Update the prisma schema
@@ -51,12 +51,3 @@ Separately, this setup is supported by the PGAdmin4 'database_frontend' containe
 * Port over the existing API
 * Expand on the new API
 * GraphQL? / Apollo?
-
-
-
-# Production setup
-1) Add data to the DB
-2) Show down the production bot
-3) Start up the new bot
-
-  
