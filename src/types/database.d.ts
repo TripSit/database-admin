@@ -108,52 +108,50 @@ export enum UserActionType {
 export enum Table {
   Bridges = "bridges",
   Counting = "counting",
-  DiscordGuilds = "discordGuilds",
-  DrugArticles = "drugArticles",
-  DrugCategories = "drugCategories",
-  DrugCategoryDrugs = "drugCategoryDrugs",
-  DrugNames = "drugNames",
-  DrugVariantRoas = "drugVariantRoas",
-  DrugVariants = "drugVariants",
+  DiscordGuilds = "discord_guilds",
+  DrugArticles = "drug_articles",
+  DrugCategories = "drug_categories",
+  DrugCategoryDrugs = "drug_category_drugs",
+  DrugNames = "drug_names",
+  DrugVariantRoas = "drug_variant_roas",
+  DrugVariants = "drug_variants",
   Drugs = "drugs",
   KnexMigrations = "knex_migrations",
   KnexMigrationsLock = "knex_migrations_lock",
   Personas = "personas",
-  ReactionRoles = "reactionRoles",
   ReactionRoles = "reaction_roles",
-  RpgInventory = "rpgInventory",
+  RpgInventory = "rpg_inventory",
   Rss = "rss",
-  UserActions = "userActions",
-  UserDrugDoses = "userDrugDoses",
-  UserExperience = "userExperience",
-  UserReminders = "userReminders",
-  UserTickets = "userTickets",
+  UserActions = "user_actions",
+  UserDrugDoses = "user_drug_doses",
+  UserExperience = "user_experience",
+  UserReminders = "user_reminders",
+  UserTickets = "user_tickets",
   Users = "users",
 }
 
 export type Tables = {
   "bridges": Bridges,
   "counting": Counting,
-  "discordGuilds": DiscordGuilds,
-  "drugArticles": DrugArticles,
-  "drugCategories": DrugCategories,
-  "drugCategoryDrugs": DrugCategoryDrugs,
-  "drugNames": DrugNames,
-  "drugVariantRoas": DrugVariantRoas,
-  "drugVariants": DrugVariants,
+  "discord_guilds": DiscordGuilds,
+  "drug_articles": DrugArticles,
+  "drug_categories": DrugCategories,
+  "drug_category_drugs": DrugCategoryDrugs,
+  "drug_names": DrugNames,
+  "drug_variant_roas": DrugVariantRoas,
+  "drug_variants": DrugVariants,
   "drugs": Drugs,
   "knex_migrations": KnexMigrations,
   "knex_migrations_lock": KnexMigrationsLock,
   "personas": Personas,
-  "reactionRoles": ReactionRoles,
   "reaction_roles": ReactionRoles,
-  "rpgInventory": RpgInventory,
+  "rpg_inventory": RpgInventory,
   "rss": Rss,
-  "userActions": UserActions,
-  "userDrugDoses": UserDrugDoses,
-  "userExperience": UserExperience,
-  "userReminders": UserReminders,
-  "userTickets": UserTickets,
+  "user_actions": UserActions,
+  "user_drug_doses": UserDrugDoses,
+  "user_experience": UserExperience,
+  "user_reminders": UserReminders,
+  "user_tickets": UserTickets,
   "users": Users,
 };
 
@@ -166,46 +164,46 @@ export type Bridges = {
 
 export type Counting = {
   id: string;
-  guildId: string;
-  channelId: string;
+  guild_id: string;
+  channel_id: string;
   type: CountingType;
-  currentNumber: number;
-  currentStakeholders: string | null;
-  currentNumberMessageID: string;
-  currentNumberMessageDate: Date;
-  currentNumberMessageAuthor: string;
-  lastNumber: number | null;
-  lastNumberMessageID: string | null;
-  lastNumberMessageDate: Date | null;
-  lastNumberMessageAuthor: string | null;
-  lastNumberBrokenBy: string | null;
-  lastNumberBrokenDate: Date | null;
-  recordNumber: number;
-  recordNumberMessageID: string | null;
-  recordNumberMessageDate: Date | null;
-  recordNumberMessageAuthor: string | null;
-  recordNumberBrokenBy: string | null;
-  recordNumberBrokenDate: Date | null;
+  current_number: number;
+  current_stakeholders: string | null;
+  current_number_message_id: string;
+  current_number_message_date: Date;
+  current_number_message_author: string;
+  last_number: number | null;
+  last_number_message_id: string | null;
+  last_number_message_date: Date | null;
+  last_number_message_author: string | null;
+  last_number_broken_by: string | null;
+  last_number_broken_date: Date | null;
+  record_number: number;
+  record_number_message_id: string | null;
+  record_number_message_date: Date | null;
+  record_number_message_author: string | null;
+  record_number_broken_by: string | null;
+  record_number_broken_date: Date | null;
 };
 
 export type DiscordGuilds = {
   id: string;
-  isBanned: boolean;
-  lastDramaAt: Date | null;
-  dramaReason: string | null;
-  maxOnlineMembers: number | null;
-  channelSanctuary: string | null;
-  channelGeneral: string | null;
-  channelTripsit: string | null;
-  channelTripsitmeta: string | null;
-  channelApplications: string | null;
-  roleNeedshelp: string | null;
-  roleTripsitter: string | null;
-  roleHelper: string | null;
-  roleTechhelp: string | null;
-  removedAt: Date | null;
-  joinedAt: Date;
-  createdAt: Date;
+  is_banned: boolean;
+  last_drama_at: Date | null;
+  drama_reason: string | null;
+  max_online_members: number | null;
+  channel_sanctuary: string | null;
+  channel_general: string | null;
+  channel_tripsit: string | null;
+  channel_tripsitmeta: string | null;
+  channel_applications: string | null;
+  role_needshelp: string | null;
+  role_tripsitter: string | null;
+  role_helper: string | null;
+  role_techhelp: string | null;
+  removed_at: Date | null;
+  joined_at: Date;
+  created_at: Date;
   partner: boolean;
   supporter: boolean;
   premium_role_ids: string | null;
@@ -213,81 +211,81 @@ export type DiscordGuilds = {
 
 export type DrugArticles = {
   id: string;
-  drugId: string;
+  drug_id: string;
   url: string;
   title: string;
   description: string | null;
-  publishedAt: Date | null;
-  lastModifiedBy: string;
-  lastModifiedAt: Date;
-  postedBy: string;
-  createdAt: Date;
+  published_at: Date | null;
+  last_modified_by: string;
+  last_modified_at: Date;
+  posted_by: string;
+  created_at: Date;
 };
 
 export type DrugCategories = {
   id: string;
   name: string;
   type: DrugCategoryType;
-  createdAt: Date;
+  created_at: Date;
 };
 
 export type DrugCategoryDrugs = {
   id: string;
-  drugId: string;
-  drugCategoryId: string;
+  drug_id: string;
+  drug_category_id: string;
 };
 
 export type DrugNames = {
   id: string;
-  drugId: string;
+  drug_id: string;
   name: string;
-  isDefault: boolean;
+  is_default: boolean;
   type: DrugNameType;
 };
 
 export type DrugVariantRoas = {
   id: string;
-  drugVariantId: string;
+  drug_variant_id: string;
   route: DrugRoa;
-  doseThreshold: number | null;
-  doseLight: number | null;
-  doseCommon: number | null;
-  doseStrong: number | null;
-  doseHeavy: number | null;
-  doseWarning: string | null;
-  durationTotalMin: number | null;
-  durationTotalMax: number | null;
-  durationOnsetMin: number | null;
-  durationOnsetMax: number | null;
-  durationComeupMin: number | null;
-  durationComeupMax: number | null;
-  durationPeakMin: number | null;
-  durationPeakMax: number | null;
-  durationOffsetMin: number | null;
-  durationOffsetMax: number | null;
-  durationAfterEffectsMin: number | null;
-  durationAfterEffectsMax: number | null;
+  dose_threshold: number | null;
+  dose_light: number | null;
+  dose_common: number | null;
+  dose_strong: number | null;
+  dose_heavy: number | null;
+  dose_warning: string | null;
+  duration_total_min: number | null;
+  duration_total_max: number | null;
+  duration_onset_min: number | null;
+  duration_onset_max: number | null;
+  duration_comeup_min: number | null;
+  duration_comeup_max: number | null;
+  duration_peak_min: number | null;
+  duration_peak_max: number | null;
+  duration_offset_min: number | null;
+  duration_offset_max: number | null;
+  duration_after_effects_min: number | null;
+  duration_after_effects_max: number | null;
 };
 
 export type DrugVariants = {
   id: string;
-  drugId: string;
+  drug_id: string;
   name: string | null;
   description: string | null;
   default: boolean;
-  lastUpdatedBy: string;
-  updatedAt: Date;
-  createdAt: Date;
+  last_updated_by: string;
+  updated_at: Date;
+  created_at: Date;
 };
 
 export type Drugs = {
   id: string;
   summary: string | null;
-  psychonautWikiUrl: string | null;
-  errowidExperiencesUrl: string | null;
-  lastUpdatedBy: string;
-  updatedAt: Date;
-  createdAt: Date;
+  psychonaut_wiki_url: string | null;
+  errowid_experiences_url: string | null;
+  last_updated_by: string;
+  updated_at: Date;
+  created_at: Date;
 };
 
 export type KnexMigrations = {
@@ -304,41 +302,34 @@ export type KnexMigrationsLock = {
 
 export type Personas = {
   id: string;
-  userId: string;
+  user_id: string;
   name: string;
   class: string;
   species: string;
   guild: string;
   tokens: number;
-  tripTokenMultiplier: number;
-  lastQuest: Date | null;
-  lastDungeon: Date | null;
-  lastRaid: Date | null;
-  createdAt: Date;
+  trip_token_multiplier: number;
+  last_quest: Date | null;
+  last_dungeon: Date | null;
+  last_raid: Date | null;
+  created_at: Date;
 };
 
 export type ReactionRoles = {
   id: string;
-  guildId: string;
-  channelId: string;
-  messageId: string;
-  reactionId: string;
-  roleId: string;
-  createdAt: Date;
-};
-
-export type ReactionRoles = {
-  id: string;
+  guild_id: string;
+  channel_id: string;
+  message_id: string;
+  reaction_id: string;
+  role_id: string;
+  created_at: Date;
   type: ReactionRoleType;
   name: string;
-  guildId: string;
-  reaction_id: string | null;
-  message_id: string | null;
 };
 
 export type RpgInventory = {
   id: string;
-  personaId: string;
+  persona_id: string;
   label: string;
   value: string;
   description: string;
@@ -348,112 +339,112 @@ export type RpgInventory = {
   equipped: boolean;
   consumable: boolean;
   effect: string;
-  effectValue: string;
+  effect_value: string;
   emoji: string;
-  createdAt: Date;
+  created_at: Date;
 };
 
 export type Rss = {
   id: string;
-  guildId: string;
+  guild_id: string;
   url: string;
-  lastPostId: string;
+  last_post_id: string;
   destination: string;
 };
 
 export type UserActions = {
   id: string;
-  userId: string;
+  user_id: string;
   type: UserActionType;
-  banEvasionRelatedUser: string | null;
+  ban_evasion_related_user: string | null;
   description: string | null;
-  internalNote: string;
-  expiresAt: Date | null;
-  repealedBy: string | null;
-  repealedAt: Date | null;
-  createdBy: string;
-  createdAt: Date;
+  internal_note: string;
+  expires_at: Date | null;
+  repealed_by: string | null;
+  repealed_at: Date | null;
+  created_by: string;
+  created_at: Date;
 };
 
 export type UserDrugDoses = {
   id: string;
-  userId: string;
-  drugId: string;
+  user_id: string;
+  drug_id: string;
   route: DrugRoa;
   dose: number;
   units: DrugMassUnit;
-  createdAt: Date;
+  created_at: Date;
 };
 
 export type UserExperience = {
   id: string;
-  userId: string;
+  user_id: string;
   category: ExperienceCategory;
   level: number;
-  levelPoints: number;
-  totalPoints: number;
-  lastMessageAt: Date;
-  lastMessageChannel: string;
-  createdAt: Date;
+  level_points: number;
+  total_points: number;
+  last_message_at: Date;
+  last_message_channel: string;
+  created_at: Date;
   type: ExperienceType;
 };
 
 export type UserReminders = {
   id: string;
-  userId: string;
-  reminderText: string | null;
-  triggerAt: Date;
-  createdAt: Date;
+  user_id: string;
+  reminder_text: string | null;
+  trigger_at: Date;
+  created_at: Date;
 };
 
 export type UserTickets = {
   id: string;
-  userId: string;
+  user_id: string;
   description: string;
-  threadId: string;
-  metaThreadId: string | null;
-  firstMessageId: string;
+  thread_id: string;
+  meta_thread_id: string | null;
+  first_message_id: string;
   type: TicketType;
   status: TicketStatus;
-  closedBy: string | null;
-  closedAt: Date | null;
-  reopenedBy: string | null;
-  reopenedAt: Date | null;
-  archivedAt: Date;
-  deletedAt: Date;
-  createdAt: Date;
+  closed_by: string | null;
+  closed_at: Date | null;
+  reopened_by: string | null;
+  reopened_at: Date | null;
+  archived_at: Date;
+  deleted_at: Date;
+  created_at: Date;
 };
 
 export type Users = {
   id: string;
   email: string | null;
   username: string | null;
-  passwordHash: string | null;
-  discordId: string | null;
-  ircId: string | null;
-  matrixId: string | null;
+  password_hash: string | null;
+  discord_id: string | null;
+  irc_id: string | null;
+  matrix_id: string | null;
   timezone: string | null;
   birthday: Date | null;
   roles: string | null;
-  mindsetRole: string | null;
-  mindsetRoleExpiresAt: Date | null;
-  karmaGiven: number;
-  karmaReceived: number;
-  sparklePoints: number;
-  movePoints: number;
-  empathyPoints: number;
-  discordBotBan: boolean;
-  ticketBan: boolean;
-  lastSeenAt: Date;
-  lastSeenIn: string | null;
-  joinedAt: Date;
-  removedAt: Date | null;
-  modThreadId: string | null;
-  helperRoleBan: boolean;
-  contributorRoleBan: boolean;
-  lastfmUsername: string | null;
+  mindset_role: string | null;
+  mindset_role_expires_at: Date | null;
+  karma_given: number;
+  karma_received: number;
+  sparkle_points: number;
+  move_points: number;
+  empathy_points: number;
+  discord_bot_ban: boolean;
+  ticket_ban: boolean;
+  last_seen_at: Date;
+  last_seen_in: string | null;
+  joined_at: Date;
+  removed_at: Date | null;
+  mod_thread_id: string | null;
+  helper_role_ban: boolean;
+  contributor_role_ban: boolean;
+  lastfm_username: string | null;
   partner: boolean | null;
   supporter: boolean | null;
-  moodleId: string | null;
+  moodle_id: string | null;
 };
 
