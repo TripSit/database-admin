@@ -60,14 +60,14 @@ export async function up(knex: Knex): Promise<void> {
     table.unique(['internal_channel', 'external_channel']);
   });
 
-  await knex.schema.createTable('reaction_roles', table => {
-    // Make new bridge table
+  await knex.schema.alterTable('reactionRoles', table => {
     table
-      .uuid('id')
+      .text('guildId')
       .notNullable()
-      .defaultTo(knex.raw('uuid_generate_v4()'))
-      .primary();
-      
+      .references('id')
+      .inTable('discordGuilds')
+      .alter();
+
     table
       .enum('type', [
         'COLOR',
@@ -87,20 +87,6 @@ export async function up(knex: Knex): Promise<void> {
       .text('name')
       .notNullable()
       .defaultTo('custom');
-
-    table
-      .text('guildId')
-      .notNullable()
-      .references('id')
-      .inTable('discordGuilds');
-
-    table
-      .text('reaction_id')
-      .nullable();
-
-    table
-      .text('message_id')
-      .nullable();
   });
 }
 
