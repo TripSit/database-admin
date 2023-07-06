@@ -1,5 +1,7 @@
+import { knexSnakeCaseMappers } from 'objection';
 export default {
   development: {
+    ...knexSnakeCaseMappers(),
     client: 'pg',
     connection: process.env.DATABASE_URL,
     migrations: {
@@ -12,6 +14,7 @@ export default {
     },
   },
   production: {
+    ...knexSnakeCaseMappers(),
     client: 'pg',
     connection: process.env.DATABASE_URL,
     migrations: {
