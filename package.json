@@ -15,7 +15,7 @@
     "rebuild:be": "docker compose  --project-name tripsit-dev-apps up database_backend  -d --force-recreate --build",
     "rebuild:pa": "docker compose  --project-name tripsit-dev-apps up database_frontend -d --force-recreate --build",
     "rebuild:all": "docker compose --project-name tripsit-dev-apps up                   -d --force-recreate --build",
-    "start": "npm run build && db:update && node --inspect=0.0.0.0 dist/index.js",
+    "start": "npm run build && npm run db:update && node --inspect=0.0.0.0 dist/index.js",
     "test": "jest --silent -c ./src/testing/jest.unit.config.ts",
     "build": "rimraf dist && swc ./src -d ./dist",
     "docker:db:redo": "npm run docker:db:migrate:rollback && npm run docker:db:migrate:latest && npm run docker:db:seed",
