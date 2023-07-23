@@ -53,12 +53,12 @@ export async function up(knex: Knex): Promise<void> {
       .notNullable();
 
     table
-      .integer('appealMessageId')
+      .text('appealMessageId')
       .notNullable();
 
     table
       .text('responseMessage')
-      .notNullable();
+      .nullable();
 
     table
       .timestamp('createdAt')
@@ -72,6 +72,9 @@ export async function up(knex: Knex): Promise<void> {
     table
       .timestamp('decidedAt')
       .nullable();
+
+      
+    table.unique(['user_id', 'guild_id', 'appeal_number']);
   });
 }
 

@@ -174,8 +174,8 @@ export type Appeals = {
   future: string;
   extra: string | null;
   status: AppealStatus;
-  appeal_message_id: number;
-  response_message: string;
+  appeal_message_id: string;
+  response_message: string | null;
   created_at: Date;
   reminded_at: Date | null;
   decided_at: Date | null;

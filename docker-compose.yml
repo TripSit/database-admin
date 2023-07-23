@@ -34,7 +34,7 @@ services:
     ports:
       - 5432:5432
     networks:
-        - database-net
+      - database-net
     environment:
       POSTGRES_USER: tripsit
       POSTGRES_DB: tripsit
@@ -146,5 +146,6 @@ networks:
     name: database_api-net
   database-net:
     name: database-net
+    external: true
   tripbot_website-net:
     name: tripbot_website-net
