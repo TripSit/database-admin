@@ -1,6 +1,13 @@
 // The TypeScript definitions below are automatically generated.
 // Do not touch them, or risk, your modifications being lost.
 
+export enum AppealStatus {
+  Open = "OPEN",
+  Received = "RECEIVED",
+  Accepted = "ACCEPTED",
+  Denied = "DENIED",
+}
+
 export enum BridgeStatus {
   Pending = "PENDING",
   Active = "ACTIVE",
@@ -106,6 +113,7 @@ export enum UserActionType {
 }
 
 export enum Table {
+  Appeals = "appeals",
   Bridges = "bridges",
   Counting = "counting",
   DiscordGuilds = "discord_guilds",
@@ -131,6 +139,7 @@ export enum Table {
 }
 
 export type Tables = {
+  "appeals": Appeals,
   "bridges": Bridges,
   "counting": Counting,
   "discord_guilds": DiscordGuilds,
@@ -153,6 +162,23 @@ export type Tables = {
   "user_reminders": UserReminders,
   "user_tickets": UserTickets,
   "users": Users,
+};
+
+export type Appeals = {
+  id: string;
+  guild_id: string;
+  user_id: string;
+  appeal_number: number;
+  reason: string;
+  solution: string;
+  future: string;
+  extra: string | null;
+  status: AppealStatus;
+  appeal_message_id: number;
+  response_message: string;
+  created_at: Date;
+  reminded_at: Date | null;
+  decided_at: Date | null;
 };
 
 export type Bridges = {

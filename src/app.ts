@@ -1,4 +1,6 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
+import { log } from './apiV2/utils/log';
+import bodyParser from 'body-parser';
 import morgan from 'morgan';
 
 import helmet from 'helmet';
@@ -7,11 +9,33 @@ import {notFound, errorHandler} from './middlewares';
 import api1 from './apiV1';
 import api2 from './apiV2';
 
+const F = f(__filename);
+
+log.info(F, `Started!`);
+
 const app = express();
+
+/* Configure the app */
 
 app.use(morgan('tiny'));
 app.use(helmet());
 app.use(express.json());
+
+// These came from TB's attempt
+app.use(express.urlencoded({ extended: false })); // configure the app to parse requests with urlencoded payloads
+app.use(express.json()); // configure the app to parse requests with JSON payloads
+app.use(bodyParser.text()); // configure the app to be able to read text
+app.use(bodyParser.json()); // configure the app to be able to read json
+
+// from TB: Add Access Control Allow Origin headers
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'https://tripbot.site');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+  );
+  next();
+});
 
 app.get('/', (req, res) => {
   res.json({
@@ -19,8 +43,8 @@ app.get('/', (req, res) => {
   });
 });
 
-app.use('/api/v1', api1);
-app.use('/api/v2', api2);
+app.use('/v1', api1);
+app.use('/v2', api2);
 
 app.use(notFound);
 app.use(errorHandler);

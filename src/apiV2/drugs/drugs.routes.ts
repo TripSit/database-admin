@@ -1,12 +1,12 @@
 import express from 'express';
 
-import drugDB from './drugs.queries';
+import queries from './drugs.queries';
 
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-  const drugs = await drugDB.getAllDrugs();
-  res.json(drugs);
+  const result = await queries.getAllDrugs();
+  res.json(result);
 });
 
 router.get('/:name', async (req, res, next) => {
@@ -14,9 +14,9 @@ router.get('/:name', async (req, res, next) => {
   console.log('name', name);
   try {
     if (name === 'error') throw new Error('error');
-    const drug = await drugDB.getDrug(name);
-    if (drug) {
-      return res.json(drug);
+    const result = await queries.getDrug(name);
+    if (result) {
+      return res.json(result);
     }
     return next();
   } catch (error) {

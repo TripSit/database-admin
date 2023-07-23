@@ -145,6 +145,7 @@ model users {
   partner                                                   Boolean?          @default(true)
   supporter                                                 Boolean?          @default(true)
   moodle_id                                                 String?
+  appeals                                                   appeals[]
   drug_articles_drug_articles_last_modified_byTousers       drug_articles[]   @relation("drug_articles_last_modified_byTousers")
   drug_articles_drug_articles_posted_byTousers              drug_articles[]   @relation("drug_articles_posted_byTousers")
   drug_variants                                             drug_variants[]
@@ -183,6 +184,7 @@ model discord_guilds {
   partner              Boolean          @default(true)
   supporter            Boolean          @default(true)
   premium_role_ids     String?
+  appeals              appeals[]
   counting             counting[]
   reaction_roles       reaction_roles[]
 }
@@ -363,6 +365,25 @@ model user_tickets {
   users_user_tickets_user_idTousers     users         @relation("user_tickets_user_idTousers", fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "usertickets_userid_foreign")
 }
 
+model appeals {
+  id                String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  guild_id          String
+  user_id           String         @db.Uuid
+  appeal_number     Int
+  reason            String
+  solution          String
+  future            String
+  extra             String?
+  status            appeal_status
+  appeal_message_id Int
+  response_message  String
+  created_at        DateTime       @default(now()) @db.Timestamptz(6)
+  reminded_at       DateTime?      @db.Timestamptz(6)
+  decided_at        DateTime?      @db.Timestamptz(6)
+  discord_guilds    discord_guilds @relation(fields: [guild_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "appeals_guildid_foreign")
+  users             users          @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "appeals_userid_foreign")
+}
+
 enum bridge_status {
   PENDING
   ACTIVE
@@ -465,4 +486,11 @@ enum user_action_type {
   KICK
   HELPER_BAN
   CONTRIBUTOR_BAN
+}
+
+enum appeal_status {
+  OPEN
+  RECEIVED
+  ACCEPTED
+  DENIED
 }
