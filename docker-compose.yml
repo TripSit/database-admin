@@ -71,7 +71,7 @@ services:
     - traefik.http.routers.database_pgadmin-rtr.service=database_pgadmin-svc
     - traefik.http.routers.database_pgadmin-rtr.entrypoints=websecure
     - traefik.http.routers.database_pgadmin-rtr.tls=true
-    - traefik.http.routers.database_pgadmin-rtr.middlewares=basicAuth@file
+    - traefik.http.routers.database_pgadmin-rtr.middlewares=googleAuth@file
 
   database_api:
     <<: *common-keys-apps
