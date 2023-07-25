@@ -1,4 +1,4 @@
-import Express, { Request, Response } from 'express';
+import { Request, Response } from 'express';
 
 const F = f(__filename); 
 
