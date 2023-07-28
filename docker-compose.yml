@@ -98,7 +98,7 @@ services:
     environment:
       <<: *default-tz-puid-pgid
       PORT: 5000
-      DATABASE_URL: postgres://tripsit:${POSTGRESS_ROOT}@database/tripsit
+      DATABASE_URL: postgres://tripsit:${POSTGRESS_ROOT}@database:5432/tripsit
     labels:
       - com.centurylinklabs.watchtower.enable=false
       - traefik.enable=true
@@ -130,7 +130,7 @@ services:
       <<: *default-tz-puid-pgid
       PORT: 5000
       TZ: America/Chicago
-      DATABASE_URL: postgres://tripsit:${POSTGRESS_ROOT}@database/tripsit
+      DATABASE_URL: postgres://tripsit:${POSTGRESS_ROOT}@database:5432/tripsit
     labels:
       - com.centurylinklabs.watchtower.enable=false
       - traefik.enable=false

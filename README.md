@@ -1,32 +1,28 @@
 # TripSit's Database
 
-This is TripSit's database.
+This is TripBot's database.
 
-Or more accurately, these are the tools we use to administrate the postgres container.
+Or more accurately, these are the tools we use to administrate the postgres container that tripbot connects with to access data.
 
 # How to use this
-Run 'rebuild:all' to setup the services:
-* database          - A postgres container
-* database_frontend - PGAdmin4
-  http://localhost:8081
-* database_backend  - An express server with a prisma API and knex migration scripts 
-  http://localhost:5000
-  http://localhost:5000/api/v1
-  http://localhost:5000/api/v2
-  http://localhost:5000/api/v2/drugs
-  http://localhost:5000/api/v2/drugs/dxm
+Very Important: Copy the .env.example to .env
 
-Note: You likely only want to use 'rebuild:be' to /only/ rebuild the backend stuff: The other containers hardly ever need to be restarted.
+- rebuild:postgres - Starts a blank postgres container and runs a startup script that creates users.
+- rebuild:api      - An express API that connects to the database.
+- rebuild:knex     - Runs migrations to update the database with the current schema.
+- rebuild:pgadmin  - A web interface for the database.
+- rebuild:all      - Runs all of the above commands.
 
-Once the containers are running, you can run 'db:update' to run the knex scripts:
-* Migrate to the latest version
-* Seed the database
-* Update the prisma schema
-* Generate the prisma client
-* Rebuild typescript definitions for use in other projects
+# How this all works together
+Postgres container will just sit there and receive instructions.
+Knex container will run migrations and seed the database. This doesn't need to keep running after it starts tbh.
+API container will run the express server that the website uses to communicate with the database.
+PGAdmin container is a web interface for the database, and is useful for debugging and testing.
 
-That's about it, you can now go to http://localhost:8081 and login using the info in the docker-compose.yml file.
-Hint: Username 'user@tripsit.me' and password 'SuperSecret123'
+You likely will only ever need to restart the API container if you're working on the API. 
+Restarting the Knex container will re-run the migrations, so it's safe to just leave it running.
+Nothing changes on PGadmin restart, there's no point to restarting it.
+Postgres just sits there, and should not ever have issues. Restarting should never really be necessary.
 
 # How this was built
 I followed a few guides for this:
@@ -37,15 +33,6 @@ https://kevinwwwade.medium.com/the-ultimate-node-docker-setup-step-by-step-2022-
 
 Second was helpful in learning API design:
 https://github.com/rashidmajeed/node-knex-postgres-docker
-
-We're using the stock postgres image in a docker container.
-
-This 'database' container is supported by the 'database_backend' container:
-* Runs Knex scripts like Migration, Seeding and other Queries
-* Hosts the express server that the website uses to communicate with the database
-
-Separately, this setup is supported by the PGAdmin4 'database_frontend' container.
-* This is a web interface for the database, and is useful for debugging and testing.
 
 # Things to do
 * Port over the existing API
