@@ -4,7 +4,7 @@
   "description": "Adminstration of the postgres database.",
   "main": "src/start.ts",
   "prisma": {
-    "schema": "db/prisma/schema.prisma"
+    "schema": "src/prisma/schema.prisma"
   },
   "engines": {
     "node": "v20.5.0",

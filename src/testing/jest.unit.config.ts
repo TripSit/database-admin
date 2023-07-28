@@ -7,7 +7,6 @@ const jestConfig: Config = {
   collectCoverage: true,
   coverageDirectory: './src/testing/coverage',
   collectCoverageFrom: [
-    // './db/**/*',
     './dist/apiV1/**/*',
     './dist/apiV2/**/*',
   ],

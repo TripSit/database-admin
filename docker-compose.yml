@@ -27,8 +27,11 @@ services:
     build:
       context: ./
       dockerfile: ./Dockerfile.postgres
+      dockerfile: ./Dockerfile.postgres
     container_name: database
     # Uncomment this if you want the DB to persist between rebuilds
+    volumes:
+      - ${DOCKERDIR}/appdata/database/data:/var/lib/postgresql/data
     volumes:
       - ${DOCKERDIR}/appdata/database/data:/var/lib/postgresql/data
     ports:
@@ -87,32 +90,24 @@ services:
       - 5000:5000
       - 9229:9229
     networks:
-      - database_api-net
+      - database_backend-net
       - database-net
     volumes:
-      - ./src:/usr/src/app/src   # Needed for hot-reloading of source code
-      - ./.env:/usr/src/app/.env # Needed for hot-reloading of source code
+      - ./:/usr/src/app
       - /usr/src/app/node_modules
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
     environment:
       <<: *default-tz-puid-pgid
       PORT: 5000
+      TZ: America/Chicago
       DATABASE_URL: postgres://tripsit:${POSTGRESS_ROOT}@database:5432/tripsit
     labels:
       - com.centurylinklabs.watchtower.enable=false
-      - traefik.enable=true
-      - traefik.docker.network=database_api-net
-      - traefik.http.services.database_api-svc.loadbalancer.server.port=5000
-      - traefik.http.routers.database_api-rtr.rule=Host(`api.${DNS_DOMAIN}`)
-      - traefik.http.routers.database_api-rtr.service=database_api-svc
-      - traefik.http.routers.database_api-rtr.entrypoints=websecure
-      - traefik.http.routers.database_api-rtr.tls=true
-      - traefik.http.routers.database_api-rtr.middlewares=default@file
-    command: npx tsc-watch --onSuccess "npx nodemon --config ./nodemon.json"
+      - traefik.enable=false
+    command: npm run migrate
 
+    
   database_knex:
-    # <<: *common-keys-apps
+    <<: *common-keys-apps
     build:
       context: ./
       dockerfile: ./Dockerfile.knex

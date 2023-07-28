@@ -4,7 +4,6 @@
   },
   "include": [
     "src/**/*", // start.ts
-    "db/**/*", // start.ts
   ],
   "exclude": [
     "*/node_modules",

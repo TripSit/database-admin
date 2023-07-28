@@ -7,11 +7,11 @@ export default {
     connection: process.env.DATABASE_URL,
     migrations: {
       extension: 'ts',
-      directory: '../db/migrations',
+      directory: './knex/migrations',
     },
     seeds: {
       extension: 'ts',
-      directory: '../db/seeds',
+      directory: './knex/seeds',
     },
   },
   production: {
@@ -20,11 +20,11 @@ export default {
     connection: process.env.DATABASE_URL,
     migrations: {
       extension: 'ts',
-      directory: '../db/migrations',
+      directory: './knex/migrations',
     },
     seeds: {
       extension: 'ts',
-      directory: '../db/seeds',
+      directory: './knex/seeds',
     },
   },
 };
