@@ -39,7 +39,7 @@ services:
       POSTGRES_USER: tripsit
       POSTGRES_DB: tripsit
       POSTGRES_PASSWORD: ${POSTGRESS_ROOT}
-      POSTGRES_HOST_AUTH_METHOD: trust
+      # POSTGRES_HOST_AUTH_METHOD: trust
     labels:
       - com.centurylinklabs.watchtower.enable=false
       - traefik.enable=false
@@ -67,11 +67,11 @@ services:
     - traefik.enable=true
     - traefik.docker.network=database_pgadmin-net
     - traefik.http.services.database_pgadmin-svc.loadbalancer.server.port=80
-    - traefik.http.routers.database_pgadmin-rtr.rule=Host(`db.${DNS_DOMAIN}`)
+    - traefik.http.routers.database_pgadmin-rtr.rule=Host(`database.${DNS_DOMAIN}`)
     - traefik.http.routers.database_pgadmin-rtr.service=database_pgadmin-svc
-    - traefik.http.routers.database_pgadmin-rtr.entrypoints=web #secure
-    # - traefik.http.routers.database_pgadmin-rtr.tls=true
-    # - traefik.http.routers.database_pgadmin-rtr.middlewares=googleAuth@file
+    - traefik.http.routers.database_pgadmin-rtr.entrypoints=websecure
+    - traefik.http.routers.database_pgadmin-rtr.tls=true
+    - traefik.http.routers.database_pgadmin-rtr.middlewares=googleAuth@file
 
   database_api:
     <<: *common-keys-apps
@@ -106,9 +106,9 @@ services:
       - traefik.http.services.database_api-svc.loadbalancer.server.port=5000
       - traefik.http.routers.database_api-rtr.rule=Host(`api.${DNS_DOMAIN}`)
       - traefik.http.routers.database_api-rtr.service=database_api-svc
-      - traefik.http.routers.database_api-rtr.entrypoints=web #secure
-      # - traefik.http.routers.database_api-rtr.tls=true
-      # - traefik.http.routers.database_api-rtr.middlewares=default@file
+      - traefik.http.routers.database_api-rtr.entrypoints=websecure
+      - traefik.http.routers.database_api-rtr.tls=true
+      - traefik.http.routers.database_api-rtr.middlewares=default@file
     command: npx tsc-watch --onSuccess "npx nodemon --config ./nodemon.json"
 
   database_knex:
