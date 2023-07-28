@@ -105,6 +105,32 @@ services:
       - traefik.enable=false
     command: npm run migrate
 
+    
+  database_knex:
+    <<: *common-keys-apps
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.knex
+      target: development
+    container_name: database_knex
+    depends_on:
+      - database
+    networks:
+      - database_knex-net
+      - database-net
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      <<: *default-tz-puid-pgid
+      PORT: 5000
+      TZ: America/Chicago
+      DATABASE_URL: postgres://tripsit:${POSTGRESS_ROOT}@database:5432/tripsit
+    labels:
+      - com.centurylinklabs.watchtower.enable=false
+      - traefik.enable=false
+    command: npm run migrate
+
 ########################### NETWORKS
 networks:
   database_pgadmin-net:
