@@ -26,37 +26,36 @@ services:
     <<: *common-keys-apps
     build:
       context: ./
-      dockerfile: ./Dockerfile-postgres
+      dockerfile: ./Dockerfile.postgres
     container_name: database
     # Uncomment this if you want the DB to persist between rebuilds
-    # volumes:
-    #   - ${DOCKERDIR}/appdata/database/data:/var/lib/postgresql/data
+    volumes:
+      - ${DOCKERDIR}/appdata/database/data:/var/lib/postgresql/data
     ports:
       - 5432:5432
     networks:
-        - database-net
+      - database-net
     environment:
       POSTGRES_USER: tripsit
       POSTGRES_DB: tripsit
       POSTGRES_PASSWORD: ${POSTGRESS_ROOT}
-      POSTGRES_HOST_AUTH_METHOD: trust
+      # POSTGRES_HOST_AUTH_METHOD: trust
     labels:
       - com.centurylinklabs.watchtower.enable=false
       - traefik.enable=false
 
-  database_frontend:
-    # <<: *common-keys-apps
+  database_pgadmin:
     build:
       context: ./
-      dockerfile: ./Dockerfile-pgadmin
+      dockerfile: ./Dockerfile.pgadmin
     restart: unless-stopped
-    container_name: database_frontend
+    container_name: database_pgadmin
     depends_on:
       - database
     ports:
       - 8081:80
     networks:
-      - database_frontend-net
+      - database_pgadmin-net
       - database-net
     environment:
       <<: *default-tz-puid-pgid
@@ -66,29 +65,29 @@ services:
     labels:
     - com.centurylinklabs.watchtower.enable=false
     - traefik.enable=true
-    - traefik.docker.network=database_frontend-net
-    - traefik.http.services.database_frontend-svc.loadbalancer.server.port=80
-    - traefik.http.routers.database_frontend-rtr.rule=Host(`database.${DNS_DOMAIN}`)
-    - traefik.http.routers.database_frontend-rtr.service=database_frontend-svc
-    - traefik.http.routers.database_frontend-rtr.entrypoints=web
-    # - traefik.http.routers.database_frontend-rtr.tls=true
-    # - traefik.http.routers.database_frontend-rtr.middlewares=chain-basic-auth@file
+    - traefik.docker.network=database_pgadmin-net
+    - traefik.http.services.database_pgadmin-svc.loadbalancer.server.port=80
+    - traefik.http.routers.database_pgadmin-rtr.rule=Host(`database.${DNS_DOMAIN}`)
+    - traefik.http.routers.database_pgadmin-rtr.service=database_pgadmin-svc
+    - traefik.http.routers.database_pgadmin-rtr.entrypoints=websecure
+    - traefik.http.routers.database_pgadmin-rtr.tls=true
+    - traefik.http.routers.database_pgadmin-rtr.middlewares=googleAuth@file
 
-  database_backend:
+  database_api:
     <<: *common-keys-apps
     build:
       context: ./
-      dockerfile: ./Dockerfile
+      dockerfile: ./Dockerfile.api
       # Only will build development stage from our dockerfile
       target: development
-    container_name: database_backend
+    container_name: database_api
     depends_on:
       - database
     ports:
       - 5000:5000
       - 9229:9229
     networks:
-      - database_backend-net
+      - database_api-net
       - database-net
     volumes:
       - ./:/usr/src/app
@@ -97,24 +96,45 @@ services:
       <<: *default-tz-puid-pgid
       PORT: 5000
       TZ: America/Chicago
-      DATABASE_URL: postgres://tripsit:${POSTGRESS_ROOT}@database/tripsit
+      DATABASE_URL: postgres://tripsit:${POSTGRESS_ROOT}@database:5432/tripsit
     labels:
       - com.centurylinklabs.watchtower.enable=false
-      - traefik.enable=true
-      - traefik.docker.network=database_backend-net
-      - traefik.http.services.database_backend-svc.loadbalancer.server.port=5000
-      - traefik.http.routers.database_backend-rtr.rule=Host(`api.${DNS_DOMAIN}`)
-      - traefik.http.routers.database_backend-rtr.service=database_backend-svc
-      - traefik.http.routers.database_backend-rtr.entrypoints=web
-      # - traefik.http.routers.database_backend-rtr.tls=true
-      # - traefik.http.routers.database_backend-rtr.middlewares=chain-basic-auth@file
-    command: npm run start
+      - traefik.enable=false
+    command: npm run migrate
+    
+  database_knex:
+    <<: *common-keys-apps
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.knex
+    container_name: database_knex
+    depends_on:
+      - database
+    networks:
+      - database_knex-net
+      - database-net
+    # volumes:
+    #   - ./:/usr/src/app
+    #   - /usr/src/app/node_modules
+    environment:
+      <<: *default-tz-puid-pgid
+      PORT: 5000
+      TZ: America/Chicago
+      DATABASE_URL: postgres://tripsit:${POSTGRESS_ROOT}@database:5432/tripsit
+    labels:
+      - com.centurylinklabs.watchtower.enable=false
+      - traefik.enable=false
 
 ########################### NETWORKS
 networks:
-  database_frontend-net:
-    name: database_frontend-net
-  database_backend-net:
-    name: database_backend-net
+  database_pgadmin-net:
+    name: database_pgadmin-net
+  database_knex-net:
+    name: database_knex-net
+  database_api-net:
+    name: database_api-net
   database-net:
     name: database-net
+    # external: true
+  tripbot_website-net:
+    name: tripbot_website-net

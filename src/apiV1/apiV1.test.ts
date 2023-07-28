@@ -10,6 +10,6 @@ describe('GET /api/v1', () => {
       .expect(200);
 
     expect(response.body.message)
-      .toEqual(`Welcome to TripSit's original API, preserved for legacy purposes.`);
+      .toEqual('Welcome to TripSit\'s original API, preserved for legacy purposes.');
   });
 });

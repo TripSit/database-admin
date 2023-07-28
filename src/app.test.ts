@@ -1,4 +1,4 @@
-import supertest from 'supertest'
+import supertest from 'supertest';
 
 import app from './app';
 
@@ -10,6 +10,6 @@ describe('GET /', () => {
       .expect(200);
 
     expect(response.body.message)
-      .toEqual(`This should be the main website. You likely want to go to /api/v2`);
+      .toEqual('This should be the main website. You likely want to go to /api/v2');
   });
 });
