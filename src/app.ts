@@ -1,17 +1,18 @@
-import express, { Request, Response } from 'express';
-import { log } from './apiV2/utils/log';
+import express from 'express';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
 
 import helmet from 'helmet';
+import RateLimit from 'express-rate-limit';
+import { log } from './apiV2/utils/log';
 
-import {notFound, errorHandler} from './middlewares';
+import { notFound, errorHandler } from './middlewares';
 import api1 from './apiV1';
 import api2 from './apiV2';
 
 const F = f(__filename);
 
-log.info(F, `Started!`);
+log.info(F, 'Started!');
 
 const app = express();
 
@@ -48,5 +49,14 @@ app.use('/v2', api2);
 
 app.use(notFound);
 app.use(errorHandler);
+
+// set up rate limiter: maximum of five requests per minute
+const limiter = RateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 5,
+});
+
+// apply rate limiter to all requests
+app.use(limiter);
 
 export default app;
