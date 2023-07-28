@@ -79,7 +79,7 @@ services:
       context: ./
       dockerfile: ./Dockerfile.api
       # Only will build development stage from our dockerfile
-      target: development
+      # target: development
     container_name: database_api
     depends_on:
       - database
@@ -90,9 +90,9 @@ services:
       - database_api-net
       - database-net
     volumes:
-      - ./src:/usr/src/app/src   # Needed for hot-reloading of source code
-      - ./.env:/usr/src/app/.env # Needed for hot-reloading of source code
-      - /usr/src/app/node_modules
+      # - ./src:/usr/src/app/src   # Needed for hot-reloading of source code
+      # - ./.env:/usr/src/app/.env # Needed for hot-reloading of source code
+      # - /usr/src/app/node_modules
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     environment:
@@ -109,7 +109,7 @@ services:
       - traefik.http.routers.database_api-rtr.entrypoints=websecure
       - traefik.http.routers.database_api-rtr.tls=true
       - traefik.http.routers.database_api-rtr.middlewares=default@file
-    command: npx tsc-watch --onSuccess "npx nodemon --config ./nodemon.json"
+    # command: npx tsc-watch --onSuccess "npx nodemon --config ./nodemon.json"
 
   database_knex:
     # <<: *common-keys-apps
