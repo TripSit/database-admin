@@ -2,14 +2,14 @@ import db from '../../db';
 
 export default {
   getAllDrugs() {
-    return db.drugNames.findMany();
+    return db.drug_names.findMany();
   },
 
   async getDrug(name:string) {
-    return db.drugNames.findFirst({
+    return db.drug_names.findFirst({
       where: {
-        name: name.toUpperCase()
-      }
-    })
+        name: name.toUpperCase(),
+      },
+    });
   },
 };

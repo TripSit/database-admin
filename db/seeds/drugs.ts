@@ -173,11 +173,11 @@ export async function seed(knex: Knex) {
 
   const [defaultUserId] = await Promise.all([
     knex('users').insert({
-        email: 'moonbear@tripsit.me',
-        username: 'MoonBear',
-        discordId: 'moonbearDiscordId',
-        passwordHash: await argon.hash('P@ssw0rd'),
-      })
+      email: 'moonbear@tripsit.me',
+      username: 'MoonBear',
+      discordId: 'moonbearDiscordId',
+      passwordHash: await argon.hash('P@ssw0rd'),
+    })
       .returning(['id'])
       .then(([{ id }]) => id),
     knex('users').insert([

@@ -34,6 +34,7 @@ export async function down(knex: Knex): Promise<void> {
     .update({ type: 'DISCORD_BOT_BAN' });
 
   // // Remove the enum values
+  // eslint-disable-next-line max-len
   // await knex.raw("CREATE TYPE old_type AS ENUM('NOTE','WARNING','FULL_BAN','TICKET_BAN','DISCORD_BOT_BAN','BAN_EVASION','UNDERBAN','TIMEOUT','REPORT','KICK')");
 
   // await knex.raw('ALTER TABLE userActions ALTER COLUMN type SET DATA TYPE old_type USING type::text::old_type');

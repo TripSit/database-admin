@@ -8,7 +8,7 @@ const connectionConfig = knexConfig[environment as 'development' | 'production']
 
 const knex = Knex(connectionConfig);
 
-updateTypes(knex, { output: path.join(__dirname, 'database.d.ts') }).catch(err => {
-  console.error(err);
+updateTypes(knex, { output: path.join(__dirname, 'database.d.ts') }).catch(() => {
+  // console.error(err);
   process.exit(1);
 });
