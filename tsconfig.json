@@ -3,14 +3,12 @@
     "files": true
   },
   "include": [
-    "src/", // start.ts
+    "src/**/*", // start.ts
+    "db/**/*", // start.ts
   ],
   "exclude": [
     "*/node_modules",
-    "*/dist",
-    "*/build",
     "node_modules",
-    "**/*.test.ts"
   ],
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig to read more about this file */

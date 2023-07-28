@@ -73,10 +73,8 @@ export async function up(knex: Knex): Promise<void> {
       .timestamp('decidedAt')
       .nullable();
 
-      
     table.unique(['user_id', 'guild_id', 'appeal_number']);
   });
-
 
   // Permissions
   // This one is large cuz we didnt do this in the beginning and now we have to do it for every table

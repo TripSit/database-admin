@@ -10,6 +10,6 @@ describe('GET /v2', () => {
       .expect(200);
 
     expect(response.body.message)
-      .toEqual(`Welcome to TripSit's new API`);
+      .toEqual('Welcome to TripSit\'s new API');
   });
 });

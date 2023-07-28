@@ -1,4 +1,5 @@
 import { knexSnakeCaseMappers } from 'objection';
+
 export default {
   development: {
     ...knexSnakeCaseMappers(),
@@ -25,7 +26,7 @@ export default {
       extension: 'ts',
       directory: '../db/seeds',
     },
-  }
+  },
 };
 
 // Defaults beleow

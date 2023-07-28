@@ -8,8 +8,8 @@ export default {
   async getDrug(name:string) {
     return db.drug_names.findFirst({
       where: {
-        name: name.toUpperCase()
-      }
-    })
+        name: name.toUpperCase(),
+      },
+    });
   },
 };

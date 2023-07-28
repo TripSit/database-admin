@@ -8,22 +8,22 @@ export default {
   },
 
   async getAppeals(UserId:string) {
-    log.debug(F, `UserId: ${UserId}`)
+    log.debug(F, `UserId: ${UserId}`);
     return db.appeals.findMany({
       where: {
-        user_id: UserId
-      }
-    })
+        user_id: UserId,
+      },
+    });
   },
 
   async getLatestAppeal(UserId:string) {
     return db.appeals.findFirst({
       where: {
-        user_id: UserId
+        user_id: UserId,
       },
       orderBy: {
-        created_at: 'desc'
-      }
-    })
+        created_at: 'desc',
+      },
+    });
   },
 };

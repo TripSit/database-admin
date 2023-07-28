@@ -8,8 +8,8 @@ export default {
   async getUser(DiscordId:string) {
     return db.users.findFirst({
       where: {
-        discord_id: DiscordId
-      }
-    })
+        discord_id: DiscordId,
+      },
+    });
   },
 };
