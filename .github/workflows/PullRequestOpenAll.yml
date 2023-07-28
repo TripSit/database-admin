@@ -11,22 +11,22 @@ on:
       - reopened
 
 jobs:
-  # lint:
-  #   name: Lint
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v3
-  #   - name: Use Node.js '16.17.1'
-  #     uses: actions/setup-node@v3
-  #     with:
-  #       node-version: '16.17.1'
-  #       cache: 'npm'
-  #   - name: Update npm
-  #     run: npm install -g npm && npm --version
-  #   - name: Install eslint
-  #     run: npm install eslint eslint-config-airbnb-base eslint-config-airbnb-typescript eslint-config-google eslint-import-resolver-typescript eslint-plugin-import --save-dev && npx eslint --version
-  #   - name: Linting
-  #     run: npx eslint --ext .ts,.js .
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js '16.17.1'
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16.17.1'
+        cache: 'npm'
+    - name: Update npm
+      run: npm install -g npm && npm --version
+    - name: Install eslint
+      run: npm install eslint eslint-config-airbnb-base eslint-config-airbnb-typescript eslint-config-google eslint-import-resolver-typescript eslint-plugin-import --save-dev && npx eslint --version
+    - name: Linting
+      run: npx eslint . --fix --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix
   # test:
   #   name: Test
   #   runs-on: ubuntu-latest
