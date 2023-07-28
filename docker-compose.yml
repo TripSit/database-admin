@@ -29,8 +29,8 @@ services:
       dockerfile: ./Dockerfile.postgres
     container_name: database
     # Uncomment this if you want the DB to persist between rebuilds
-    # volumes:
-    #   - ${DOCKERDIR}/appdata/database/data:/var/lib/postgresql/data
+    volumes:
+      - ${DOCKERDIR}/appdata/database/data:/var/lib/postgresql/data
     ports:
       - 5432:5432
     networks:
@@ -69,9 +69,9 @@ services:
     - traefik.http.services.database_pgadmin-svc.loadbalancer.server.port=80
     - traefik.http.routers.database_pgadmin-rtr.rule=Host(`db.${DNS_DOMAIN}`)
     - traefik.http.routers.database_pgadmin-rtr.service=database_pgadmin-svc
-    - traefik.http.routers.database_pgadmin-rtr.entrypoints=websecure
-    - traefik.http.routers.database_pgadmin-rtr.tls=true
-    - traefik.http.routers.database_pgadmin-rtr.middlewares=googleAuth@file
+    - traefik.http.routers.database_pgadmin-rtr.entrypoints=web #secure
+    # - traefik.http.routers.database_pgadmin-rtr.tls=true
+    # - traefik.http.routers.database_pgadmin-rtr.middlewares=googleAuth@file
 
   database_api:
     <<: *common-keys-apps
@@ -106,9 +106,9 @@ services:
       - traefik.http.services.database_api-svc.loadbalancer.server.port=5000
       - traefik.http.routers.database_api-rtr.rule=Host(`api.${DNS_DOMAIN}`)
       - traefik.http.routers.database_api-rtr.service=database_api-svc
-      - traefik.http.routers.database_api-rtr.entrypoints=websecure
-      - traefik.http.routers.database_api-rtr.tls=true
-      - traefik.http.routers.database_api-rtr.middlewares=default@file
+      - traefik.http.routers.database_api-rtr.entrypoints=web #secure
+      # - traefik.http.routers.database_api-rtr.tls=true
+      # - traefik.http.routers.database_api-rtr.middlewares=default@file
     command: npx tsc-watch --onSuccess "npx nodemon --config ./nodemon.json"
 
   database_knex:
@@ -146,6 +146,6 @@ networks:
     name: database_api-net
   database-net:
     name: database-net
-    external: true
+    # external: true
   tripbot_website-net:
     name: tripbot_website-net
