@@ -8,9 +8,9 @@ Or more accurately, these are the tools we use to administrate the postgres cont
 Very Important: Copy the .env.example to .env
 
 - rebuild:postgres - Starts a blank postgres container and runs a startup script that creates users.
-- rebuild:api      - An express API that connects to the database.
-- rebuild:knex     - Runs migrations to update the database with the current schema.
-- rebuild:pgadmin  - A web interface for the database.
+- rebuild:knex     - (Required to run on first start) Runs migrations to update the database with the current schema.
+- rebuild:api      - (Optional) An express API that connects to the database.
+- rebuild:pgadmin  - (Optional) A web interface for the database.
 - rebuild:all      - Runs all of the above commands.
 
 # How this all works together

@@ -13,8 +13,8 @@
   "scripts": {
     "# Start #": "",
     "rebuild:postgres": "docker compose --project-name tripbot up -d --force-recreate --build database",
-    "rebuild:api":      "docker compose --project-name tripbot up -d --force-recreate --build database_api",
     "rebuild:knex":     "docker compose --project-name tripbot up -d --force-recreate --build database_knex",
+    "rebuild:api":      "docker compose --project-name tripbot up -d --force-recreate --build database_api",
     "rebuild:pgadmin":  "docker compose --project-name tripbot up -d --force-recreate --build database_pgadmin",
     "rebuild:all":      "docker compose --project-name tripbot up -d --force-recreate --build",
     "# API #": "",
