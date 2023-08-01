@@ -53,7 +53,7 @@ model drugs {
   updated_at              DateTime              @default(now()) @db.Timestamptz(6)
   created_at              DateTime              @default(now()) @db.Timestamptz(6)
   drug_articles           drug_articles[]
-  drug_category_drugs     drug_category_drugs[]
+  drug_category_drugs     drug_category_drugs[] @ignore
   drug_names              drug_names[]
   drug_variants           drug_variants[]
   users                   users                 @relation(fields: [last_updated_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "drugs_lastupdatedby_foreign")
@@ -93,8 +93,8 @@ model reaction_roles {
   id             String             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   guild_id       String
   channel_id     String
-  message_id     String
-  reaction_id    String
+  message_id     String?
+  reaction_id    String?
   role_id        String
   created_at     DateTime           @default(now()) @db.Timestamptz(6)
   type           reaction_role_type @default(CUSTOM)
@@ -142,8 +142,8 @@ model users {
   helper_role_ban                                           Boolean           @default(false)
   contributor_role_ban                                      Boolean           @default(false)
   lastfm_username                                           String?
-  partner                                                   Boolean?          @default(true)
-  supporter                                                 Boolean?          @default(true)
+  partner                                                   Boolean?          @default(false)
+  supporter                                                 Boolean?          @default(false)
   moodle_id                                                 String?
   appeals                                                   appeals[]
   drug_articles_drug_articles_last_modified_byTousers       drug_articles[]   @relation("drug_articles_last_modified_byTousers")
@@ -181,8 +181,8 @@ model discord_guilds {
   removed_at           DateTime?        @db.Timestamptz(6)
   joined_at            DateTime         @default(now()) @db.Timestamptz(6)
   created_at           DateTime         @default(now()) @db.Timestamptz(6)
-  partner              Boolean          @default(true)
-  supporter            Boolean          @default(true)
+  partner              Boolean          @default(false)
+  supporter            Boolean          @default(false)
   premium_role_ids     String?
   appeals              appeals[]
   counting             counting[]
@@ -210,15 +210,17 @@ model drug_categories {
   name                String                @unique(map: "drugcategories_name_unique")
   type                drug_category_type
   created_at          DateTime              @default(now()) @db.Timestamptz(6)
-  drug_category_drugs drug_category_drugs[]
+  drug_category_drugs drug_category_drugs[] @ignore
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model drug_category_drugs {
-  id               String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   drug_id          String          @db.Uuid
   drug_category_id String          @db.Uuid
   drug_categories  drug_categories @relation(fields: [drug_category_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "drugcategorydrugs_drugcategoryid_foreign")
   drugs            drugs           @relation(fields: [drug_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "drugcategorydrugs_drugid_foreign")
+
+  @@ignore
 }
 
 model drug_names {
@@ -333,6 +335,7 @@ model user_experience {
   users                users               @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "userexperience_userid_foreign")
 
   @@unique([user_id, category, type], map: "userexperience_userid_category_type_unique")
+  @@unique([id, user_id, category], map: "userexperience_id_userid_type_unique")
 }
 
 model user_reminders {
@@ -350,9 +353,9 @@ model user_tickets {
   description                           String
   thread_id                             String
   meta_thread_id                        String?
-  first_message_id                      String
   type                                  ticket_type
   status                                ticket_status @default(OPEN)
+  first_message_id                      String
   closed_by                             String?       @db.Uuid
   closed_at                             DateTime?     @db.Timestamptz(6)
   reopened_by                           String?       @db.Uuid

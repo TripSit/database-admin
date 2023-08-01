@@ -256,7 +256,6 @@ export type DrugCategories = {
 };
 
 export type DrugCategoryDrugs = {
-  id: string;
   drug_id: string;
   drug_category_id: string;
 };
@@ -345,8 +344,8 @@ export type ReactionRoles = {
   id: string;
   guild_id: string;
   channel_id: string;
-  message_id: string;
-  reaction_id: string;
+  message_id: string | null;
+  reaction_id: string | null;
   role_id: string;
   created_at: Date;
   type: ReactionRoleType;
@@ -429,9 +428,9 @@ export type UserTickets = {
   description: string;
   thread_id: string;
   meta_thread_id: string | null;
-  first_message_id: string;
   type: TicketType;
   status: TicketStatus;
+  first_message_id: string;
   closed_by: string | null;
   closed_at: Date | null;
   reopened_by: string | null;
