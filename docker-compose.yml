@@ -83,15 +83,23 @@ services:
     container_name: database_api
     depends_on:
       - database
+      - database_redis
     ports:
       - 5000:5000
       - 9229:9229
     networks:
       - database_api-net
       - database-net
+      - database_redis-net
     volumes:
-      - ./:/usr/src/app
-      - /usr/src/app/node_modules
+      - ./src:/usr/src/app/src # Needed for hot-reloading of source code
+      # - ./jest:/usr/src/app/jest # Needed for hot-reloading of tests
+      # - ./coverage:/usr/src/app/coverage # Needed for extracting the coverage report
+      - ./.env:/usr/src/app/.env # Needed for hot-reloading the .env
+      - ./package.json:/usr/src/app/package.json # Needed for saving changes to package.json
+      - ./package-lock.json:/usr/src/app/package-lock.json # Needed for saving changes to package.json
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     environment:
       <<: *default-tz-puid-pgid
       PORT: 5000
@@ -125,6 +133,29 @@ services:
       - com.centurylinklabs.watchtower.enable=false
       - traefik.enable=false
 
+  database_redis:
+    <<: *common-keys-core
+    image: bitnami/redis:latest
+    container_name: database_redis
+    user: root
+    ports:
+      - 6379:6379
+    networks:
+      - database_redis-net
+    environment:
+      # - REDIS_PASSWORD=Password123
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    # labels:
+      # - com.centurylinklabs.watchtower.enable=true
+      # - traefik.enable=true
+      # - traefik.docker.network=nextcloud_redis-net
+      # - traefik.tcp.services.redis-svc.loadbalancer.server.port=6379
+
+      # - traefik.tcp.routers.redis-cloudflare.rule=HostSNI(`*`)
+      # - traefik.tcp.routers.redis-cloudflare.entrypoints=redis
+      # - traefik.tcp.routers.redis-cloudflare.service=redis-svc
+
 ########################### NETWORKS
 networks:
   database_pgadmin-net:
@@ -133,6 +164,8 @@ networks:
     name: database_knex-net
   database_api-net:
     name: database_api-net
+  database_redis-net:
+    name: database_redis-net
   database-net:
     name: database-net
     # external: true

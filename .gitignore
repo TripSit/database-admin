@@ -8,6 +8,8 @@ dist
 node_modules
 .env
 src/testing/coverage
+docker/appdata
+build
 
 # User-specific files
 *.rsuser

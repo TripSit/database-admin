@@ -1,4 +1,13 @@
 {
+  "eslint.codeActionsOnSave.rules": null,
+  "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+  },
+  "eslint.validate": [
+      "javascript",
+      "typescript",
+  ],
+  "editor.tabSize": 2,
   "files.watcherExclude": {
     "**/.git/objects/**": true,
     "**/.git/subtree-cache/**": true
