@@ -53,6 +53,9 @@ app.use('/api/tripsit', api1);
 app.use('/api/v1', api1);
 app.use('/api/v2', api2);
 
+// For traefik reverse proxy
+app.set('trust proxy', true);
+
 app.use(notFound);
 app.use(errorHandler);
 
