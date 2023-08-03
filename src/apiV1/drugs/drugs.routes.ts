@@ -38,7 +38,10 @@ router.get('/getInteraction/:drugAName/:drugBName', async (req, res, next) => {
     const result = await queries.getInteraction(drugAName, drugBName);
     log.debug(F, `result: ${JSON.stringify(result)}`);
     if (result) {
-      return res.json(result);
+      return res.json({
+        err: null,
+        data: [result],
+      });
     }
     return next();
   } catch (error) {
@@ -64,7 +67,10 @@ router.get('/getDrug/:name', async (req, res, next) => {
     const result = await queries.getDrug(name);
     log.debug(F, `result: ${JSON.stringify(result)}`);
     if (result) {
-      return res.json(result);
+      return res.json({
+        err: null,
+        data: [result],
+      });
     }
     return next();
   } catch (error) {
@@ -77,7 +83,10 @@ router.get('/getAllDrugNames', async (req, res, next) => {
   try {
     const result = await queries.getAllDrugNames();
     if (result) {
-      return res.json(result);
+      return res.json({
+        err: null,
+        data: [result],
+      });
     }
     return next();
   } catch (error) {
@@ -102,7 +111,10 @@ router.get('/getAllDrugNamesByCategory/:category', async (req, res, next) => {
     if (category === 'error') throw new Error('error');
     const result = await queries.getAllDrugNamesByCategory(category);
     if (result) {
-      return res.json(result);
+      return res.json({
+        err: null,
+        data: [result],
+      });
     }
     return next();
   } catch (error) {
@@ -115,7 +127,10 @@ router.get('/getAllDrugs', async (req, res, next) => {
   try {
     const result = await queries.getAllDrugs();
     if (result) {
-      return res.json(result);
+      return res.json({
+        err: null,
+        data: [result],
+      });
     }
     return next();
   } catch (error) {
@@ -128,7 +143,10 @@ router.get('/getAllCategories', async (req, res, next) => {
   try {
     const result = await queries.getAllCategories();
     if (result) {
-      return res.json(result);
+      return res.json({
+        err: null,
+        data: [result],
+      });
     }
     return next();
   } catch (error) {
@@ -141,7 +159,10 @@ router.get('/getAllDrugAliases', async (req, res, next) => {
   try {
     const result = await queries.getAllDrugAliases();
     if (result) {
-      return res.json(result);
+      return res.json({
+        err: null,
+        data: [result],
+      });
     }
     return next();
   } catch (error) {
