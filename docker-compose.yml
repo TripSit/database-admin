@@ -113,14 +113,14 @@ services:
       - traefik.http.services.tripbot_pgadmin-svc.loadbalancer.server.port=80
 
       - traefik.http.routers.tripbot_pgadmin-cloudflare.rule=Host(`database.${DNS_DOMAIN}`, `db.${DNS_DOMAIN}`, `pgadmin.${DNS_DOMAIN}`)
-      - traefik.http.routers.tripbot_pgadmin-cloudflare.entrypoints=web #secure
-      # - traefik.http.routers.tripbot_pgadmin-cloudflare.tls.certresolver=letsencrypt
+      - traefik.http.routers.tripbot_pgadmin-cloudflare.entrypoints=websecure
+      - traefik.http.routers.tripbot_pgadmin-cloudflare.tls.certresolver=letsencrypt
       - traefik.http.routers.tripbot_pgadmin-cloudflare.service=tripbot_pgadmin-svc
       - traefik.http.routers.tripbot_pgadmin-cloudflare.middlewares=default@file
         
       - traefik.http.routers.tripbot_pgadmin-namecheap.rule=Host(`database.tripsit.me`, `db.tripsit.me`, `pgadmin.tripsit.me`)
-      - traefik.http.routers.tripbot_pgadmin-namecheap.entrypoints=web #secure
-      # - traefik.http.routers.tripbot_pgadmin-namecheap.tls.certresolver=letsencrypt-legacy
+      - traefik.http.routers.tripbot_pgadmin-namecheap.entrypoints=websecure
+      - traefik.http.routers.tripbot_pgadmin-namecheap.tls.certresolver=letsencrypt-legacy
       - traefik.http.routers.tripbot_pgadmin-namecheap.service=tripbot_pgadmin-svc
       - traefik.http.routers.tripbot_pgadmin-namecheap.middlewares=default@file
 
@@ -140,6 +140,7 @@ services:
     #   - 9229:9229
     networks:
       - tripbot_api-net
+      - tripbot_database-net
       - tripbot_redis-net
     volumes:
       - ./src:/usr/src/app/src # Needed for hot-reloading of source code
@@ -161,15 +162,16 @@ services:
       - traefik.docker.network=tripbot_api-net
       - traefik.http.services.tripbot_api-svc.loadbalancer.server.port=5000
 
-      - traefik.http.routers.tripbot_api-cloudflare.rule=Host(`tripbot.${DNS_DOMAIN}`) && PathPrefix(`/api`)
-      - traefik.http.routers.tripbot_api-cloudflare.entrypoints=web #secure
-      # - traefik.http.routers.tripbot_api-cloudflare.tls.certresolver=letsencrypt
+      - traefik.http.routers.tripbot_api-cloudflare.rule=Host(`tripbot.${DNS_DOMAIN}`) && PathPrefix(`/api`) || Host(`api.${DNS_DOMAIN}`)
+      - traefik.http.routers.tripbot_api-cloudflare.entrypoints=websecure
+      - traefik.http.routers.tripbot_api-cloudflare.tls.certresolver=letsencrypt
       - traefik.http.routers.tripbot_api-cloudflare.service=tripbot_api-svc
       - traefik.http.routers.tripbot_api-cloudflare.middlewares=default@file
         
-      - traefik.http.routers.tripbot_api-namecheap.rule=Host(`api.tripsit.me`)
-      - traefik.http.routers.tripbot_api-namecheap.entrypoints=web #secure
-      # - traefik.http.routers.tripbot_api-namecheap.tls.certresolver=letsencrypt-legacy
+        
+      - traefik.http.routers.tripbot_api-namecheap.rule=Host(`tripbot.tripsit.me`) && PathPrefix(`/api`) || Host(`api.tripsit.me`)
+      - traefik.http.routers.tripbot_api-namecheap.entrypoints=websecure
+      - traefik.http.routers.tripbot_api-namecheap.tls.certresolver=letsencrypt-legacy
       - traefik.http.routers.tripbot_api-namecheap.service=tripbot_api-svc
       - traefik.http.routers.tripbot_api-namecheap.middlewares=default@file
     command: npx tsc-watch --onSuccess "npx nodemon --config ./nodemon.json"

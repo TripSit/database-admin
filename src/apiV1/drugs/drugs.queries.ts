@@ -29,7 +29,7 @@ const db = ddb.databank;
 for (const drugName of Object.keys(drugData)) {
   const drug = drugData[drugName];
   db.create('drugs', drugName.toLowerCase(), drug, () => {});
-  log.debug(F, `Added: ${drugName.toLowerCase()}`);
+  // log.debug(F, `Added: ${drugName.toLowerCase()}`);
 
   if (drugData[drugName].categories) {
     for (const category of drugData[drugName].categories) {
