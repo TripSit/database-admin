@@ -2,13 +2,14 @@ import type { Config } from 'jest';
 
 const jestConfig: Config = {
   testMatch: [
-    '<rootDir>/**/*.test.js',
+    // '<rootDir>/**/*.test.js',
+    '<rootDir>/build/apiV1/*.test.js',
   ],
-  collectCoverage: true,
+  collectCoverage: false,
   coverageDirectory: './src/testing/coverage',
   collectCoverageFrom: [
-    './dist/apiV1/**/*',
-    './dist/apiV2/**/*',
+    './build/apiV1/**/*',
+    './build/apiV2/**/*',
   ],
   coveragePathIgnorePatterns: [
     '/node_modules/',

@@ -94,6 +94,8 @@ RUN npm install pm2 -g
 COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=build /usr/src/app/build ./build
 
+RUN npx prisma generate
+
 USER node
 
 # Start the bot using the production build

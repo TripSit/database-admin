@@ -38,14 +38,26 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/', (req, res) => {
+// For traefik reverse proxy
+app.set('trust proxy', 2);
+
+// Simple IP return to test reverse proxy and "hello world" the api
+app.get('/api/ip', (request, response) => response.send(request.ip));
+
+app.get('/api', (req, res) => {
   res.json({
-    message: 'This should be the main website. You likely want to go to /api/v2',
+    welcome: 'Welcome to TripSit\'s API endpoint.',
+    description: 'You likely want one of the below endpoints.',
+    development: 'Interested in helping out? Join the https://discord.gg/tripsit chat and ask for Moonbear.',
+    endpoints: [
+      '/tripsit',
+    ],
   });
 });
 
-app.use('/v1', api1);
-app.use('/v2', api2);
+app.use('/api/tripsit', api1);
+app.use('/api/v1', api1);
+app.use('/api/v2', api2);
 
 app.use(notFound);
 app.use(errorHandler);
