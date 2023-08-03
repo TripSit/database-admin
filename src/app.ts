@@ -38,6 +38,12 @@ app.use((req, res, next) => {
   next();
 });
 
+// For traefik reverse proxy
+app.set('trust proxy', 2);
+
+// Simple IP return to test reverse proxy and "hello world" the api
+app.get('/api/ip', (request, response) => response.send(request.ip));
+
 app.get('/api', (req, res) => {
   res.json({
     welcome: 'Welcome to TripSit\'s API endpoint.',
@@ -52,9 +58,6 @@ app.get('/api', (req, res) => {
 app.use('/api/tripsit', api1);
 app.use('/api/v1', api1);
 app.use('/api/v2', api2);
-
-// For traefik reverse proxy
-app.set('trust proxy', true);
 
 app.use(notFound);
 app.use(errorHandler);

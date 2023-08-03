@@ -22,19 +22,20 @@ x-common-keys-apps: &common-keys-apps
   restart: unless-stopped
 
 services:
-  database:
+  # Internal-services
+  tripbot_database:
     <<: *common-keys-apps
     build:
       context: ./
       dockerfile: ./Dockerfile.postgres
-    container_name: database
+    container_name: tripbot_database
     # Uncomment this if you want the DB to persist between rebuilds
     # volumes:
     #   - ${DOCKERDIR}/appdata/database/data:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
+    # ports:
+    #   - 5432:5432
     networks:
-      - database-net
+      - tripbot_database-net
     environment:
       POSTGRES_USER: tripsit
       POSTGRES_DB: tripsit
@@ -42,85 +43,19 @@ services:
       # POSTGRES_HOST_AUTH_METHOD: trust
     labels:
       - com.centurylinklabs.watchtower.enable=false
+      - traefik.docker.network=tripbot_database-net
       - traefik.enable=false
 
-  database_pgadmin:
-    build:
-      context: ./
-      dockerfile: ./Dockerfile.pgadmin
-    restart: unless-stopped
-    container_name: database_pgadmin
-    depends_on:
-      - database
-    ports:
-      - 8081:80
-    networks:
-      - database_pgadmin-net
-      - database-net
-    environment:
-      <<: *default-tz-puid-pgid
-      TZ: America/Chicago
-      PGADMIN_DEFAULT_EMAIL: admin@tripsit.me
-      PGADMIN_DEFAULT_PASSWORD: ${POSTGRESS_ADMIN_PASS}
-    labels:
-    - com.centurylinklabs.watchtower.enable=false
-    - traefik.enable=true
-    - traefik.docker.network=database_pgadmin-net
-    - traefik.http.services.database_pgadmin-svc.loadbalancer.server.port=80
-    - traefik.http.routers.database_pgadmin-rtr.rule=Host(`database.${DNS_DOMAIN}`)
-    - traefik.http.routers.database_pgadmin-rtr.service=database_pgadmin-svc
-    - traefik.http.routers.database_pgadmin-rtr.entrypoints=websecure
-    - traefik.http.routers.database_pgadmin-rtr.tls=true
-    - traefik.http.routers.database_pgadmin-rtr.middlewares=googleAuth@file
-
-  database_api:
-    <<: *common-keys-apps
-    build:
-      context: ./
-      dockerfile: ./Dockerfile.api
-      # Only will build development stage from our dockerfile
-      # target: build
-    container_name: database_api
-    depends_on:
-      - database
-      - database_redis
-    ports:
-      - 5000:5000
-      - 9229:9229
-    networks:
-      - database_api-net
-      - database-net
-      - database_redis-net
-    # volumes:
-    #   - ./src:/usr/src/app/src # Needed for hot-reloading of source code
-    #   # - ./jest:/usr/src/app/jest # Needed for hot-reloading of tests
-    #   # - ./coverage:/usr/src/app/coverage # Needed for extracting the coverage report
-    #   - ./.env:/usr/src/app/.env # Needed for hot-reloading the .env
-    #   - ./package.json:/usr/src/app/package.json # Needed for saving changes to package.json
-    #   - ./package-lock.json:/usr/src/app/package-lock.json # Needed for saving changes to package.json
-    #   - /etc/timezone:/etc/timezone:ro
-    #   - /etc/localtime:/etc/localtime:ro
-    environment:
-      <<: *default-tz-puid-pgid
-      PORT: 5000
-      TZ: America/Chicago
-      DATABASE_URL: postgres://tripsit:${POSTGRESS_ROOT}@database:5432/tripsit
-    labels:
-      - com.centurylinklabs.watchtower.enable=false
-      - traefik.enable=false
-    # command: npx tsc-watch --onSuccess "npx nodemon --config ./nodemon.json"
-    
-  database_knex:
+  tripbot_knex:
     # <<: *common-keys-apps
     build:
       context: ./
       dockerfile: ./Dockerfile.knex
-    container_name: database_knex
+    container_name: tripbot_knex
     depends_on:
-      - database
+      - tripbot_database
     networks:
-      - database_knex-net
-      - database-net
+      - tripbot_database-net
     # volumes:
     #   - ./src/:/usr/src/app/src
     #   - /usr/src/app/node_modules
@@ -128,46 +63,133 @@ services:
       <<: *default-tz-puid-pgid
       PORT: 5000
       TZ: America/Chicago
-      DATABASE_URL: postgres://tripsit:${POSTGRESS_ROOT}@database:5432/tripsit
+      DATABASE_URL: postgres://tripsit:${POSTGRESS_ROOT}@tripbot_database:5432/tripsit
     labels:
       - com.centurylinklabs.watchtower.enable=false
+      - traefik.docker.network=tripbot_database-net
       - traefik.enable=false
 
-  database_redis:
+  tripbot_redis:
     <<: *common-keys-core
     image: bitnami/redis:latest
-    container_name: database_redis
+    container_name: tripbot_redis
     user: root
-    ports:
-      - 6379:6379
+    # ports:
+    #   - 6379:6379
     networks:
-      - database_redis-net
+      - tripbot_redis-net
     environment:
       # - REDIS_PASSWORD=Password123
       - ALLOW_EMPTY_PASSWORD=yes
       - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
-    # labels:
-      # - com.centurylinklabs.watchtower.enable=true
-      # - traefik.enable=true
-      # - traefik.docker.network=nextcloud_redis-net
-      # - traefik.tcp.services.redis-svc.loadbalancer.server.port=6379
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+      - traefik.docker.network=tripbot_redis-net
+      - traefik.enable=false
 
-      # - traefik.tcp.routers.redis-cloudflare.rule=HostSNI(`*`)
-      # - traefik.tcp.routers.redis-cloudflare.entrypoints=redis
-      # - traefik.tcp.routers.redis-cloudflare.service=redis-svc
+  # External-services
+  tripbot_pgadmin:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.pgadmin
+    restart: unless-stopped
+    container_name: tripbot_pgadmin
+    depends_on:
+      - tripbot_database
+    # ports:
+    #   - 8081:80
+    networks:
+      - tripbot_pgadmin-net
+      - tripbot_database-net
+    environment:
+      <<: *default-tz-puid-pgid
+      TZ: America/Chicago
+      PGADMIN_DEFAULT_EMAIL: admin@tripsit.me
+      PGADMIN_DEFAULT_PASSWORD: ${POSTGRESS_ADMIN_PASS}
+    labels:
+      - com.centurylinklabs.watchtower.enable=false
+      - traefik.enable=true
+      - traefik.docker.network=tripbot_pgadmin-net
+      - traefik.http.services.tripbot_pgadmin-svc.loadbalancer.server.port=80
+
+      - traefik.http.routers.tripbot_pgadmin-cloudflare.rule=Host(`database.${DNS_DOMAIN}`, `db.${DNS_DOMAIN}`, `pgadmin.${DNS_DOMAIN}`)
+      - traefik.http.routers.tripbot_pgadmin-cloudflare.entrypoints=web #secure
+      # - traefik.http.routers.tripbot_pgadmin-cloudflare.tls.certresolver=letsencrypt
+      - traefik.http.routers.tripbot_pgadmin-cloudflare.service=tripbot_pgadmin-svc
+      - traefik.http.routers.tripbot_pgadmin-cloudflare.middlewares=default@file
+        
+      - traefik.http.routers.tripbot_pgadmin-namecheap.rule=Host(`database.tripsit.me`, `db.tripsit.me`, `pgadmin.tripsit.me`)
+      - traefik.http.routers.tripbot_pgadmin-namecheap.entrypoints=web #secure
+      # - traefik.http.routers.tripbot_pgadmin-namecheap.tls.certresolver=letsencrypt-legacy
+      - traefik.http.routers.tripbot_pgadmin-namecheap.service=tripbot_pgadmin-svc
+      - traefik.http.routers.tripbot_pgadmin-namecheap.middlewares=default@file
+
+  tripbot_api:
+    <<: *common-keys-apps
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.api
+      # Only will build development stage from our dockerfile
+      target: development
+    container_name: tripbot_api
+    depends_on:
+      - tripbot_database
+      - tripbot_redis
+    # ports:
+    #   - 5000:5000
+    #   - 9229:9229
+    networks:
+      - tripbot_api-net
+      - tripbot_redis-net
+    volumes:
+      - ./src:/usr/src/app/src # Needed for hot-reloading of source code
+    #   # - ./jest:/usr/src/app/jest # Needed for hot-reloading of tests
+    #   # - ./coverage:/usr/src/app/coverage # Needed for extracting the coverage report
+    #   - ./.env:/usr/src/app/.env # Needed for hot-reloading the .env
+    #   - ./package.json:/usr/src/app/package.json # Needed for saving changes to package.json
+    #   - ./package-lock.json:/usr/src/app/package-lock.json # Needed for saving changes to package.json
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      <<: *default-tz-puid-pgid
+      PORT: 5000
+      TZ: America/Chicago
+      DATABASE_URL: postgres://tripsit:${POSTGRESS_ROOT}@tripbot_database:5432/tripsit
+    labels:
+      - com.centurylinklabs.watchtower.enable=false
+      - traefik.enable=true
+      - traefik.docker.network=tripbot_api-net
+      - traefik.http.services.tripbot_api-svc.loadbalancer.server.port=5000
+
+      - traefik.http.routers.tripbot_api-cloudflare.rule=Host(`tripbot.${DNS_DOMAIN}`) && PathPrefix(`/api`)
+      - traefik.http.routers.tripbot_api-cloudflare.entrypoints=web #secure
+      # - traefik.http.routers.tripbot_api-cloudflare.tls.certresolver=letsencrypt
+      - traefik.http.routers.tripbot_api-cloudflare.service=tripbot_api-svc
+      - traefik.http.routers.tripbot_api-cloudflare.middlewares=default@file
+        
+      - traefik.http.routers.tripbot_api-namecheap.rule=Host(`api.tripsit.me`)
+      - traefik.http.routers.tripbot_api-namecheap.entrypoints=web #secure
+      # - traefik.http.routers.tripbot_api-namecheap.tls.certresolver=letsencrypt-legacy
+      - traefik.http.routers.tripbot_api-namecheap.service=tripbot_api-svc
+      - traefik.http.routers.tripbot_api-namecheap.middlewares=default@file
+    command: npx tsc-watch --onSuccess "npx nodemon --config ./nodemon.json"
 
 ########################### NETWORKS
 networks:
-  database_pgadmin-net:
-    name: database_pgadmin-net
-  database_knex-net:
-    name: database_knex-net
-  database_api-net:
-    name: database_api-net
-  database_redis-net:
-    name: database_redis-net
-  database-net:
-    name: database-net
-    # external: true
+  tripbot-net:
+    name: tripbot-net
+  tripbot_database-net:
+    name: tripbot_database-net
+  tripbot_redis-net:
+    name: tripbot_redis-net
+  tripbot_knex-net:
+    name: tripbot_knex-net
   tripbot_website-net:
     name: tripbot_website-net
+    external: true
+  tripbot_api-net:
+    name: tripbot_api-net
+    external: true
+  tripbot_pgadmin-net:
+    name: tripbot_pgadmin-net
+    external: true

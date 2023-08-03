@@ -22,7 +22,7 @@ class DatabaseDriver {
       dir: '',
     };
 
-    if (driver === 'redis') params.host = 'database_redis';
+    if (driver === 'redis') params.host = 'tripbot_redis';
     if (driver === 'disk') params.dir = 'db';
 
     this.databank = Databank.get(driver, params);
