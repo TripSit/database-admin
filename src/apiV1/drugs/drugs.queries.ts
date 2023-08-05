@@ -11,8 +11,9 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import _ from 'underscore';
 import DatabaseDriver from './database';
-import * as drugData from '../../assets/data/drug_db_tripsit.json';
-import * as comboData from '../../assets/data/combo.json';
+import drugData from '../../assets/data/drug_db_tripsit.json';
+import categoryData from '../../assets/data/categories.json';
+import comboData from '../../assets/data/combo.json';
 
 const F = f(__filename);
 
@@ -26,18 +27,43 @@ const db = ddb.databank;
 // Now we load the drug data into the database
 // I couldn't figure out how tripbot does this, complete mystery, spent several hours on it
 // So i'm just hoping that it uses the same database file that like /combos uses
-for (const drugName of Object.keys(drugData)) {
+const updateDrugs = Object.keys(drugData).map(drugName => {
   const drug = drugData[drugName];
-  db.create('drugs', drugName.toLowerCase(), drug, () => {});
-  // log.debug(F, `Added: ${drugName.toLowerCase()}`);
+  // log.debug(F, `category: ${JSON.stringify(category)}`);
 
-  if (drugData[drugName].categories) {
-    for (const category of drugData[drugName].categories) {
-      // log.debug(F, `category: ${category}`);
-      db.save('drug_categories', category, category, () => {});
-    }
-  }
-}
+  return new Promise((resolve, reject) => {
+    db.save('drug_categories', drugName.toLowerCase(), drug, err => {
+      if (err) {
+        log.error(`Error adding ${drugName.toLowerCase()}: ${err}`);
+        reject(err);
+      } else {
+        // log.debug(F, `Added : ${drugName.toLowerCase()} : ${JSON.stringify(drug).length}`);
+        resolve();
+      }
+    });
+  });
+});
+
+const updateCategories = Object.keys(categoryData).map(categoryName => {
+  const category = categoryData[categoryName];
+  // log.debug(F, `category: ${JSON.stringify(category)}`);
+
+  return new Promise((resolve, reject) => {
+    db.save('drug_categories', categoryName.toLowerCase(), category, err => {
+      if (err) {
+        log.error(`Error adding ${categoryName.toLowerCase()}: ${err}`);
+        reject(err);
+      } else {
+        // log.debug(F, `Added : ${categoryName.toLowerCase()} : ${JSON.stringify(category).length}`);
+        resolve();
+      }
+    });
+  });
+});
+
+Promise.all(updateCategories, updateDrugs)
+  .then(() => log.debug(F, 'All drugs and categories updated successfully.'))
+  .catch(err => log.error(F, `Error adding categories: ${err}`));
 
 // The rest of this code is copied from tripbot, with some minor modifications
 // I did as few changes as possible to get rid of the critical errors to let this run
@@ -499,7 +525,8 @@ export default {
       // log.debug(F, 'getAllCategories');
       const categories = {};
       db.scan('drug_categories', cat => {
-        categories[cat] = cat;
+        // console.log(`cat: ${JSON.stringify(cat)}`);
+        categories[cat.name] = cat;
       }, () => resolve(categories));
     });
   },
