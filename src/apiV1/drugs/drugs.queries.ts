@@ -32,7 +32,7 @@ const updateDrugs = Object.keys(drugData).map(drugName => {
   // log.debug(F, `category: ${JSON.stringify(category)}`);
 
   return new Promise((resolve, reject) => {
-    db.save('drug_categories', drugName.toLowerCase(), drug, err => {
+    db.save('drugs', drugName.toLowerCase(), drug, err => {
       if (err) {
         log.error(`Error adding ${drugName.toLowerCase()}: ${err}`);
         reject(err);
@@ -61,7 +61,7 @@ const updateCategories = Object.keys(categoryData).map(categoryName => {
   });
 });
 
-Promise.all(updateCategories, updateDrugs)
+Promise.all(updateDrugs, updateCategories)
   .then(() => log.debug(F, 'All drugs and categories updated successfully.'))
   .catch(err => log.error(F, `Error adding categories: ${err}`));
 

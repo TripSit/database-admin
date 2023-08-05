@@ -144,11 +144,6 @@ services:
       - tripbot_redis-net
     volumes:
       - ./src:/usr/src/app/src # Needed for hot-reloading of source code
-    #   # - ./jest:/usr/src/app/jest # Needed for hot-reloading of tests
-    #   # - ./coverage:/usr/src/app/coverage # Needed for extracting the coverage report
-    #   - ./.env:/usr/src/app/.env # Needed for hot-reloading the .env
-    #   - ./package.json:/usr/src/app/package.json # Needed for saving changes to package.json
-    #   - ./package-lock.json:/usr/src/app/package-lock.json # Needed for saving changes to package.json
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     environment:
